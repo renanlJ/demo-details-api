@@ -1,0 +1,39 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: demo-details-api
+  description: >
+    Product details service (Java / Spring Boot) — name, description,
+    category, price and specifications for catalog items.
+  tags:
+    - demo-commerce
+    - lang-java
+    - framework-spring-boot
+    - app-backend-api
+    - criticality-high
+    - runtime-jvm
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/platform-team
+  system: demo-commerce
+  providesApis:
+    - details-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: details-api
+  description: Product details REST API.
+  tags:
+    - api-rest
+    - demo-commerce
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:default/platform-team
+  system: demo-commerce
+  definition:
+    $text: ./docs/api/openapi.yaml

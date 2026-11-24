@@ -1,0 +1,84 @@
+openapi: 3.1.0
+info:
+  title: demo-details-api
+  version: 0.1.0
+  description: >
+    Product details service for the Demo Commerce Platform. Returns name,
+    description, category, price and specifications for catalog items.
+servers:
+  - url: http://localhost:8081
+tags:
+  - name: details
+    description: Product details.
+  - name: platform
+    description: Health, readiness and metrics.
+paths:
+  /api/v1/details:
+    get:
+      operationId: listDetails
+      summary: List details for every catalog product.
+      tags: [details]
+      responses:
+        "200":
+          description: All product details.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductDetails"
+  /api/v1/details/{productId}:
+    get:
+      operationId: getDetails
+      summary: Details for a single product.
+      tags: [details]
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^SKU-[0-9]+$"
+      responses:
+        "200":
+          description: Product details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductDetails"
+        "404":
+          description: Unknown product.
+  /healthz:
+    get:
+      operationId: healthz
+      summary: Liveness probe.
+      tags: [platform]
+      responses:
+        "200":
+          description: Process is alive.
+  /readyz:
+    get:
+      operationId: readyz
+      summary: Readiness probe.
+      tags: [platform]
+      responses:
+        "200":
+          description: Service is ready.
+        "503":
+          description: Not ready (fail-readiness scenario enabled).
+components:
+  schemas:
+    ProductDetails:
+      type: object
+      required: [productId, name, description, category, price, currency, specifications]
+      properties:
+        productId: {type: string, example: SKU-1001}
+        name: {type: string, example: Aurora Coffee Maker}
+        description: {type: string}
+        category: {type: string, example: Appliances}
+        price: {type: number, format: double, example: 129.99}
+        currency: {type: string, example: USD}
+        specifications:
+          type: object
+          additionalProperties: {type: string}
+          example: {power: "1500W", capacity: "1.7L"}

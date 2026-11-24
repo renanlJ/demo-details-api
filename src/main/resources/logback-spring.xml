@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <includeMdc>true</includeMdc>
+      <customFields>{"service":"demo-details-api"}</customFields>
+      <fieldNames>
+        <timestamp>time</timestamp>
+        <levelValue>[ignore]</levelValue>
+        <version>[ignore]</version>
+        <logger>[ignore]</logger>
+      </fieldNames>
+    </encoder>
+  </appender>
+  <springProperty name="rootLevel" source="logging.level.root" defaultValue="INFO"/>
+  <root level="${rootLevel}">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>
