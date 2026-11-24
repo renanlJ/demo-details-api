@@ -51,16 +51,11 @@ jobs:
       # OSV database scan — deterministic and fast; OWASP dependency-check
       # was dropped because it needs an NVD_API_KEY to avoid 524 rate-limits.
       - name: SCA (osv-scanner)
-        uses: google/osv-scanner-action@v2.7.0
-        with:
-          scan-args: |-
-            -r
-            --skip-git
-            --format=sarif
-            --output=osv.sarif
-            .
-          download-licenses: true
-          summary: true
+        run: |
+          curl -sSfL -o /tmp/osv-scanner \
+            https://github.com/google/osv-scanner/releases/download/v2.7.0/osv-scanner_linux_amd64
+          chmod +x /tmp/osv-scanner
+          /tmp/osv-scanner scan --format=sarif --output=osv.sarif -r --skip-git .
       - name: Secret scanning (gitleaks)
         uses: gitleaks/gitleaks-action@v2
       - name: Filesystem scan (trivy)
