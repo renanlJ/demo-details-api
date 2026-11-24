@@ -1,0 +1,13 @@
+# osv-scanner configuration — documented suppressions.
+#
+# Both findings are fixed ONLY in Spring Framework 7.x, which requires
+# Spring Boot 4 (a major upgrade: Jakarta EE 11, new baselines). Accepted
+# for this internal demo workload — re-review at the Boot 4 migration or
+# by 2026-02-24, whichever comes first.
+[[IgnoredVulns]]
+id = "GHSA-j9f9-w8pj-32f8"
+reason = "spring-webmvc 9.8 — fix only in Spring 7.x; accepted until Boot 4 upgrade (re-review 2026-02-24)."
+
+[[IgnoredVulns]]
+id = "GHSA-pc63-qcmh-9cmg"
+reason = "spring-webmvc 9.8 — fix only in Spring 7.x; accepted until Boot 4 upgrade (re-review 2026-02-24)."
