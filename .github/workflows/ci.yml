@@ -48,8 +48,19 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
-      - name: SCA (OWASP dependency-check)
-        run: mvn -B org.owasp:dependency-check-maven:12.1.0:check -DfailBuildOnCVSS=7
+      # OSV database scan — deterministic and fast; OWASP dependency-check
+      # was dropped because it needs an NVD_API_KEY to avoid 524 rate-limits.
+      - name: SCA (osv-scanner)
+        uses: google/osv-scanner-action@v2.7.0
+        with:
+          scan-args: |-
+            -r
+            --skip-git
+            --format=sarif
+            --output=osv.sarif
+            .
+          download-licenses: true
+          summary: true
       - name: Secret scanning (gitleaks)
         uses: gitleaks/gitleaks-action@v2
       - name: Filesystem scan (trivy)
@@ -59,12 +70,12 @@ jobs:
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           exit-code: "1"
-      - name: Upload dependency-check report
+      - name: Upload SCA report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: sca-reports
-          path: target/dependency-check-report.html
+          path: osv.sarif
 
   build:
     name: Build jar
